@@ -1,12 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:skillku/views/auth/onboarding_views.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:skillku/apps/views.dart';
+import 'package:skillku/data/controller/job_controller.dart';
+import 'package:skillku/data/controller/training_controller.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Hive init
+  await Hive.initFlutter();
+
+  // Get Put
+  Get.lazyPut(() => JobController());
+  Get.lazyPut(() => TrainingController());
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]).then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +33,8 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       ensureScreenSize: true,
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        title: 'SkillKu',
         theme: ThemeData(
           useMaterial3: true,
           fontFamily: 'Poppins',
@@ -60,12 +77,12 @@ class _SplashPageViewsState extends State<SplashPageViews> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/bg-splash.png',
+            'assets/background/bg-splash.png',
             scale: 0.1,
           ),
           Center(
             child: Image.asset(
-              'assets/alphabet-logo-colored.png',
+              'assets/logo/alphabet-logo-colored.png',
               scale: 3.5,
             ),
           ),

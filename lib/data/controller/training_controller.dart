@@ -1,3 +1,5 @@
 import 'package:get/get.dart';
 
-class TrainingController extends GetxController {}
+class TrainingController extends GetxController {
+  
+}
