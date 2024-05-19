@@ -31,6 +31,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# API KEY & Other secrets
+lib/utils/secret.dart
+
 # Symbolication related
 app.*.symbols
 

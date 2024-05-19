@@ -1,23 +1,38 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:skillku/apps/views.dart';
+import 'package:skillku/data/controller/home_controller.dart';
 import 'package:skillku/data/controller/job_controller.dart';
-import 'package:skillku/data/controller/training_controller.dart';
+import 'package:skillku/data/controller/course_controller.dart';
+import 'package:skillku/data/local/course_db.dart';
+import 'package:skillku/domain/entities/course.dart';
+import 'package:skillku/firebase_options.dart';
+import 'package:skillku/utils/theme_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Init Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   // Hive init
   await Hive.initFlutter();
+  Hive.registerAdapter(CourseAdapter());
+  await CourseDB.init();
 
   // Get Put
   Get.lazyPut(() => JobController());
-  Get.lazyPut(() => TrainingController());
+  Get.lazyPut(() => HomeController());
+  Get.lazyPut(() => CourseController());
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
@@ -58,13 +73,25 @@ class _SplashPageViewsState extends State<SplashPageViews> {
     Timer(
       const Duration(seconds: 3),
       () {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, _, __) => const OnBoardingPageViews(),
-            transitionsBuilder: (_, anim, __, child) =>
-                FadeTransition(opacity: anim, child: child),
-          ),
-        );
+        if (FirebaseAuth.instance.currentUser != null) {
+          Get.snackbar(
+            'SkillKu',
+            'Welcome back, ${FirebaseAuth.instance.currentUser?.displayName}!',
+            colorText: AppThemeUtils.kColorWhite,
+            backgroundColor: AppThemeUtils.kColorPrimary,
+          );
+
+          // Temporary
+          Get.off(() => const NavbarPageSetup());
+        } else {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (context, _, __) => const OnBoardingPageViews(),
+              transitionsBuilder: (_, anim, __, child) =>
+                  FadeTransition(opacity: anim, child: child),
+            ),
+          );
+        }
       },
     );
 

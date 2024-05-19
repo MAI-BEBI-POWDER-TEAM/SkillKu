@@ -12,9 +12,13 @@ class _HomePageViewsState extends State<HomePageViews>
   RxInt currentPage = 0.obs;
   late TabController tabController;
 
+  final HomeController _homeController = Get.find();
+  final CourseController _courseController = Get.find();
+
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
+    Future(() => _courseController.fetchAllCourses());
 
     tabController.addListener(() {
       setState(() {
@@ -25,101 +29,16 @@ class _HomePageViewsState extends State<HomePageViews>
     super.initState();
   }
 
-  List<Map<String, dynamic>> programmingList = <Map<String, dynamic>>[
-    {
-      'thumbnail': 'assets/thumbnail/programming/front-end-thumb.png',
-      'title': 'Front-End\nDevelopment',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/programming/back-end-thumb.png',
-      'title': 'Back-End\nDevelopment',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/programming/mobile-thumb.png',
-      'title': 'Mobile App\nDevelopment',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/programming/devops-thumb.png',
-      'title': 'DevOps',
-    },
-  ];
-
-  List<Map<String, dynamic>> designList = <Map<String, dynamic>>[
-    {
-      'thumbnail': 'assets/thumbnail/design/creative-thumb.png',
-      'title': 'Creative Art',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/design/uiux-thumb.png',
-      'title': 'UI/UX Design',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/design/fashion-thumb.png',
-      'title': 'Fashion Design',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/design/graphic-thumb.png',
-      'title': 'Graphic Design',
-    },
-  ];
-
-  List<Map<String, dynamic>> multimediaList = <Map<String, dynamic>>[
-    {
-      'thumbnail': 'assets/thumbnail/multimedia/photography-thumb.png',
-      'title': 'Photography',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/multimedia/videography-thumb.png',
-      'title': 'Videography',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/multimedia/vlogging-thumb.png',
-      'title': 'Vlogging',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/multimedia/fashion-photo-thumb.png',
-      'title': 'Fashion Photoshoot',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/multimedia/product-photo-thumb.png',
-      'title': 'Product Photoshoot',
-    }
-  ];
-
-  List<Map<String, dynamic>> analyticList = <Map<String, dynamic>>[
-    {
-      'thumbnail': 'assets/thumbnail/analytic/business-analytics-thumb.png',
-      'title': 'Business Analytics',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/analytic/data-analytics-thumb.png',
-      'title': 'Data Analytics',
-    },
-    {
-      'thumbnail': 'assets/thumbnail/analytic/market-analytics-thumb.png',
-      'title': 'Market Analytics',
-    },
-  ];
-
-  List<Map<String, dynamic>> courseList = <Map<String, dynamic>>[
-    {
-      'thumbnail': 'assets/image/creative-art.png',
-      'title': 'Introduction to Colors #1',
-      'category': 'Creative Art Design',
-      'date': DateTime.now(),
-      'type': 'Online',
-    },
-    {
-      'thumbnail': 'assets/image/photography.jpg',
-      'title': 'The Exposure Triangle',
-      'category': 'Photography',
-      'date': DateTime.now(),
-      'type': 'Online',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    String name = FirebaseAuth.instance.currentUser?.displayName ?? '';
+
+    if (name.contains(' ')) {
+      name = FirebaseAuth.instance.currentUser?.displayName!.substring(0, name.indexOf(' ')) ?? '';
+    } else {
+      name = FirebaseAuth.instance.currentUser?.displayName ?? '';
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -149,7 +68,7 @@ class _HomePageViewsState extends State<HomePageViews>
                     ),
                     children: [
                       TextSpan(
-                        text: 'Andre!',
+                        text: '$name!',
                         style: TextStyle(
                           color: AppThemeUtils.kColorPrimary,
                           fontWeight: FontWeight.w700,
@@ -199,7 +118,7 @@ class _HomePageViewsState extends State<HomePageViews>
                     controller: tabController,
                     children: [
                       ListView.builder(
-                        itemCount: programmingList.length,
+                        itemCount: _homeController.programmingList.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
@@ -209,14 +128,16 @@ class _HomePageViewsState extends State<HomePageViews>
                               bottom: 16.h,
                             ),
                             child: CategoryWigdet(
-                              imageUrl: programmingList[index]['thumbnail'],
-                              title: programmingList[index]['title'],
+                              imageUrl: _homeController.programmingList[index]
+                                  ['thumbnail'],
+                              title: _homeController.programmingList[index]
+                                  ['title'],
                             ),
                           );
                         },
                       ),
                       ListView.builder(
-                        itemCount: designList.length,
+                        itemCount: _homeController.designList.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
@@ -226,14 +147,15 @@ class _HomePageViewsState extends State<HomePageViews>
                               bottom: 16.h,
                             ),
                             child: CategoryWigdet(
-                              imageUrl: designList[index]['thumbnail'],
-                              title: designList[index]['title'],
+                              imageUrl: _homeController.designList[index]
+                                  ['thumbnail'],
+                              title: _homeController.designList[index]['title'],
                             ),
                           );
                         },
                       ),
                       ListView.builder(
-                        itemCount: multimediaList.length,
+                        itemCount: _homeController.multimediaList.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
@@ -243,14 +165,16 @@ class _HomePageViewsState extends State<HomePageViews>
                               bottom: 16.h,
                             ),
                             child: CategoryWigdet(
-                              imageUrl: multimediaList[index]['thumbnail'],
-                              title: multimediaList[index]['title'],
+                              imageUrl: _homeController.multimediaList[index]
+                                  ['thumbnail'],
+                              title: _homeController.multimediaList[index]
+                                  ['title'],
                             ),
                           );
                         },
                       ),
                       ListView.builder(
-                        itemCount: analyticList.length,
+                        itemCount: _homeController.analyticList.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
@@ -260,8 +184,10 @@ class _HomePageViewsState extends State<HomePageViews>
                               bottom: 16.h,
                             ),
                             child: CategoryWigdet(
-                              imageUrl: analyticList[index]['thumbnail'],
-                              title: analyticList[index]['title'],
+                              imageUrl: _homeController.analyticList[index]
+                                  ['thumbnail'],
+                              title: _homeController.analyticList[index]
+                                  ['title'],
                             ),
                           );
                         },
@@ -283,22 +209,33 @@ class _HomePageViewsState extends State<HomePageViews>
                   ),
                 ),
                 SizedBox(height: 16.h),
-                SizedBox(
-                  height: 200.h,
-                  width: 300.w,
-                  child: ListView.builder(
-                    itemCount: courseList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return HomeCourseWidget(
-                        imageUrl: courseList[index]['thumbnail'],
-                        title: courseList[index]['title'],
-                        category: courseList[index]['category'],
-                        date: courseList[index]['date'],
-                        type: courseList[index]['type'],
-                      );
-                    },
-                  ),
+                ValueListenableBuilder(
+                  valueListenable: _courseController.courseBox.listenable(),
+                  builder: (context, course, _) {
+                    return SizedBox(
+                      height: 220.h,
+                      width: 300.w,
+                      child: ListView.builder(
+                        itemCount: _courseController.courseBox.values.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final startDate = DateFormat('dd MMMM yyyy').parse(
+                            _courseController.courseListRx[index].start,
+                          );
+
+                          return HomeCourseWidget(
+                            imageUrl:
+                                _courseController.courseListRx[index].thumbnail,
+                            title: _courseController.courseListRx[index].title,
+                            category:
+                                _courseController.courseListRx[index].category,
+                            date: startDate,
+                            type: 'Daring',
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

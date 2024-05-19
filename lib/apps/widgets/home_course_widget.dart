@@ -18,7 +18,10 @@ class HomeCourseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd MMMM yyyy').format(date);
+    String formattedStartDate = DateFormat('dd MMMM yyyy').format(date);
+    String formattedEndDate = DateFormat('dd MMMM yyyy').format(
+      date.add(const Duration(days: 2)),
+    );
     String formattedStartTime = DateFormat('HH:mm').format(date);
     String formattedEndTime = DateFormat('HH:mm').format(
       date.add(const Duration(hours: 2)),
@@ -33,19 +36,26 @@ class HomeCourseWidget extends StatelessWidget {
           children: [
             Hero(
               tag: title,
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 width: 175.w,
-                height: 90.h,
+                height: 80.h,
+                fit: BoxFit.contain,
               ),
             ),
-            Text(
-              title,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: AppThemeUtils.kColorPrimary,
-                fontWeight: FontWeight.w700,
-                fontSize: 14.sp,
+            SizedBox(height: 8.h),
+            SizedBox(
+              width: 175.w,
+              child: Text(
+                title,
+                textAlign: TextAlign.left,
+                maxLines: 2,
+                style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
+                  color: AppThemeUtils.kColorPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.sp,
+                ),
               ),
             ),
             Text(
@@ -59,7 +69,7 @@ class HomeCourseWidget extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              formattedDate,
+              '$formattedStartDate - $formattedEndDate',
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: AppThemeUtils.kColorPrimary,

@@ -8,6 +8,31 @@ class OnBoardingPageViews extends StatefulWidget {
 }
 
 class _OnBoardingPageViewsState extends State<OnBoardingPageViews> {
+  Future signInWithGoogle() async {
+    try {
+      // GoogleSignInAccount?
+      final googleUser = await GoogleSignIn().signIn();
+      // GoogleSignInAuthentication?
+      final googleAuth = await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // log('$googleAuth: $credential', name: 'Login');
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (ex) {
+      Get.snackbar(
+        'SkillKu',
+        'Failed to login! $ex',
+        colorText: AppThemeUtils.kColorWhite,
+        backgroundColor: Colors.redAccent,
+      );
+      log('${ex.code}: ${ex.stackTrace}', name: 'Login Error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +45,10 @@ class _OnBoardingPageViewsState extends State<OnBoardingPageViews> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(height: 16.h),
-                  Image.asset('assets/logo/alphabet-logo-colored.png', scale: 3.5),
+                  Image.asset(
+                    'assets/logo/alphabet-logo-colored.png',
+                    scale: 3.5,
+                  ),
                   Text(
                     'Masuk ke Skill-Ku',
                     style: TextStyle(
@@ -30,9 +58,20 @@ class _OnBoardingPageViewsState extends State<OnBoardingPageViews> {
                   ),
                   SizedBox(height: 16.h),
                   ElevatedButton(
-                    onPressed: () {
-                      // Temporary
-                      Get.off(() => const NavbarPageSetup());
+                    onPressed: () async {
+                      await signInWithGoogle();
+
+                      if (FirebaseAuth.instance.currentUser != null) {
+                        Get.snackbar(
+                          'SkillKu',
+                          'Welcome back, ${FirebaseAuth.instance.currentUser?.displayName}!',
+                          colorText: AppThemeUtils.kColorWhite,
+                          backgroundColor: AppThemeUtils.kColorPrimary,
+                        );
+
+                        // Temporary
+                        Get.off(() => const NavbarPageSetup());
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(1.sw - 50.w, 45.h),
@@ -45,10 +84,10 @@ class _OnBoardingPageViewsState extends State<OnBoardingPageViews> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Brand(Brands.linkedin),
+                        Brand(Brands.google),
                         SizedBox(width: 8.w),
                         Text(
-                          'Masuk menggunakan LinkedIn',
+                          'Masuk menggunakan Google',
                           style: TextStyle(
                             color: AppThemeUtils.kColorWhite,
                             fontWeight: FontWeight.w700,

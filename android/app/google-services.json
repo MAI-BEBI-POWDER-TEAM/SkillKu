@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1041513537956",
+    "firebase_url": "https://skillku-capstone-default-rtdb.firebaseio.com",
+    "project_id": "skillku-capstone",
+    "storage_bucket": "skillku-capstone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041513537956:android:8e43126431e2185878a131",
+        "android_client_info": {
+          "package_name": "com.example.skillku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041513537956-tla1cm0tv8s8erpv81nti5qu8ses6v13.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.skillku",
+            "certificate_hash": "a4ed541d3221f124e82f744f18c52884e61c54c5"
+          }
+        },
+        {
+          "client_id": "1041513537956-2tcjsm9gng7g866vhdurbse2o51f62b8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2jyPurPERmigcaNDeV967Uvp_Cg6HNDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041513537956-2tcjsm9gng7g866vhdurbse2o51f62b8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1041513537956-h982jc75j7f0apho1fccv58akm687f1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.skillku"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
