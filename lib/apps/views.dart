@@ -14,7 +14,6 @@ import 'package:skillku/data/controller/home_controller.dart';
 import 'package:skillku/data/controller/job_controller.dart';
 import 'package:skillku/data/controller/course_controller.dart';
 import 'package:skillku/data/remote/response/job.dart';
-import 'package:skillku/domain/entities/course.dart';
 import 'package:skillku/utils/theme_utils.dart';
 
 // Auth

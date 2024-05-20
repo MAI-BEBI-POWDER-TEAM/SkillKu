@@ -9,6 +9,8 @@ class ExplorePageViews extends StatefulWidget {
 
 class _ExplorePageViewsState extends State<ExplorePageViews>
     with SingleTickerProviderStateMixin {
+  RxString search = ''.obs;
+
   final JobController _jobController = Get.find();
   final CourseController _courseController = Get.find();
 
@@ -92,6 +94,12 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: TextFormField(
             controller: _searchController,
+            onChanged: (value) {
+              search.value = value;
+            },
+            onSaved: (value) {
+              if (value != null) search.value = value;
+            },
             decoration: const InputDecoration(
               prefixIcon: Icon(
                 BoxIcons.bx_search,
@@ -108,56 +116,134 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
             ),
           ),
         ),
-        FutureBuilder(
-          future: _jobController.getAllJob(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.data.jobsResults != null) {
-                  Job job = snapshot.data;
+        Obx(
+          () => search.value == ''
+              ? FutureBuilder(
+                  future: _jobController.getAllJob(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data.jobsResults != null) {
+                          Job job = snapshot.data;
 
-                  return Container(
-                    height: 400.h,
-                    margin: EdgeInsets.only(left: 16.w, right: 16.w),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.jobsResults!.length,
-                      itemBuilder: (context, index) {
-                        String location = '';
+                          return Container(
+                            height: 400.h,
+                            margin: EdgeInsets.only(left: 16.w, right: 16.w),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.jobsResults!.length,
+                              itemBuilder: (context, index) {
+                                String location = '';
 
-                        if (job.jobsResults![index].location != null) {
-                          location = job.jobsResults![index].location!
-                              .replaceAll('  ', '');
+                                if (job.jobsResults![index].location != null) {
+                                  location = job.jobsResults![index].location!
+                                      .replaceAll('  ', '');
+                                }
+
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8.h),
+                                  child: JobWidget(
+                                    fee: 'Negotiable',
+                                    title: job.jobsResults![index].title,
+                                    company:
+                                        job.jobsResults![index].companyName,
+                                    imageUrl: job.jobsResults![index].thumbnail,
+                                    location: location,
+                                    description:
+                                        job.jobsResults![index].description,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
                         }
+                      }
 
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.h),
-                          child: JobWidget(
-                            fee: 'Negotiable',
-                            title: job.jobsResults![index].title,
-                            company: job.jobsResults![index].companyName,
-                            imageUrl: job.jobsResults![index].thumbnail,
-                            location: location,
-                            description: job.jobsResults![index].description,
-                          ),
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    ),
-                  );
-                }
-              }
+                      }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+                      return const SizedBox();
+                    } else {
+                      return Center(
+                        child: Text(
+                          'No open jobs are found!',
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: AppThemeUtils.kColorPrimary,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                )
+              : FutureBuilder(
+                  future: _jobController.getJobBySearch(search.value),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data.jobsResults != null) {
+                          Job job = snapshot.data;
 
-              return const SizedBox();
-            } else {
-              return const SizedBox();
-            }
-          },
+                          return Container(
+                            height: 400.h,
+                            margin: EdgeInsets.only(left: 16.w, right: 16.w),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.jobsResults!.length,
+                              itemBuilder: (context, index) {
+                                String location = '';
+
+                                if (job.jobsResults![index].location != null) {
+                                  location = job.jobsResults![index].location!
+                                      .replaceAll('  ', '');
+                                }
+
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8.h),
+                                  child: JobWidget(
+                                    fee: 'Negotiable',
+                                    title: job.jobsResults![index].title,
+                                    company:
+                                        job.jobsResults![index].companyName,
+                                    imageUrl: job.jobsResults![index].thumbnail,
+                                    location: location,
+                                    description:
+                                        job.jobsResults![index].description,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      return const SizedBox();
+                    } else {
+                      return Center(
+                        child: Text(
+                          'No open jobs are found!',
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: AppThemeUtils.kColorPrimary,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
         ),
       ],
     );
@@ -168,26 +254,29 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
 
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: TextFormField(
-            controller: _searchController,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(
-                BoxIcons.bx_search,
-                color: AppThemeUtils.kColorGrey2,
-              ),
-              isDense: true,
-              hintText: 'Search',
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
-              ),
-            ),
-          ),
-        ),
+        // Container(
+        //   margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        //   child: TextFormField(
+        //     controller: _searchController,
+        //     onChanged: (value) {
+
+        //     },
+        //     decoration: const InputDecoration(
+        //       prefixIcon: Icon(
+        //         BoxIcons.bx_search,
+        //         color: AppThemeUtils.kColorGrey2,
+        //       ),
+        //       isDense: true,
+        //       hintText: 'Search',
+        //       enabledBorder: OutlineInputBorder(
+        //         borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
+        //       ),
+        //       focusedBorder: OutlineInputBorder(
+        //         borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         ValueListenableBuilder(
           valueListenable: _courseController.courseBox.listenable(),
           builder: (context, courses, __) {
@@ -206,7 +295,7 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
                     )
                   : Container(
                       width: 1.sw,
-                      height: 400.h,
+                      height: 500.h,
                       margin: EdgeInsets.only(
                         top: 8.h,
                         left: 16.w,

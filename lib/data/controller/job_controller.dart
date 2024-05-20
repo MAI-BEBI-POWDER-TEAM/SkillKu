@@ -8,7 +8,7 @@ import 'package:skillku/data/remote/response/job.dart';
 class JobController extends GetxController {
   final _jobClient = JobClient(dio: Dio());
 
-  Rx<Job> jobObs = Job().obs;
+  Rx<Job?> jobObs = Job().obs;
   RxBool isLoading = false.obs;
 
   Future getAllJob() async {

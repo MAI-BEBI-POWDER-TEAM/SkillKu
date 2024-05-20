@@ -22,22 +22,7 @@ class CourseController extends GetxController {
     courseBox = CourseDB.courseBox;
   }
 
-  // List<Map<String, dynamic>> courseList = <Map<String, dynamic>>[
-  //   {
-  //     'thumbnail': 'assets/image/creative-art.png',
-  //     'title': 'Introduction to Colors 101',
-  //     'category': 'Creative Art Design',
-  //     'date': DateTime.now(),
-  //     'type': 'Online',
-  //   },
-  //   {
-  //     'thumbnail': 'assets/image/photography.jpg',
-  //     'title': 'The Exposure Triangle',
-  //     'category': 'Photography',
-  //     'date': DateTime.now(),
-  //     'type': 'Online',
-  //   },
-  // ];
+  // Future fetchAllCourseWithQuery(String query)
 
   Future fetchAllCourses() async {
     final snaps = await ref.child('courses').get();
@@ -48,6 +33,8 @@ class CourseController extends GetxController {
         Map<String, dynamic> dataDecode = json.decode(
           jsonEncode(snaps.children.toList()[i].value),
         );
+
+        String uuid = snaps.children.toList()[i].key.toString();
 
         Course course = Course(
           uuid: snaps.children.toList()[i].key.toString(),
@@ -64,22 +51,19 @@ class CourseController extends GetxController {
 
         courseList.add(course);
 
-        if (CourseDB.getCourseByUUID(
-                snaps.children.toList()[i].key.toString()) ==
-            null) {
+        if (CourseDB.getCourseByUUID(uuid) == null) {
           await CourseDB.insertCourse(course);
         } else {
           await CourseDB.updateCourse(
-              courseBox.values.toList().indexWhere(
-                    (e) => e.uuid == snaps.children.toList()[i].key.toString(),
-                  ),
-              course);
+            courseBox.values.toList().indexWhere((e) => e.uuid == uuid),
+            course,
+          );
         }
       }
 
       courseListRx.assignAll(courseList);
       log(courseListRx.length.toString(), name: 'CourseList');
-      
+
       return courseList;
     }
   }
