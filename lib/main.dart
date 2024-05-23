@@ -103,9 +103,13 @@ class _SplashPageViewsState extends State<SplashPageViews> {
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset(
-            'assets/background/bg-splash.png',
-            scale: 0.1,
+          SizedBox(
+            width: 1.sw,
+            child: Image.asset(
+              'assets/background/bg-splash.png',
+              scale: 0.1,
+              fit: BoxFit.cover,
+            ),
           ),
           Center(
             child: Image.asset(

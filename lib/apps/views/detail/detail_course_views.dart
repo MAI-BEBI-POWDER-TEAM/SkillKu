@@ -145,7 +145,7 @@ class _DetailCoursePageViewsState extends State<DetailCoursePageViews> {
 
   Widget buildCardLevelComponent() {
     return Container(
-      height: 100.h,
+      height: 120.h,
       margin: EdgeInsets.only(left: 24.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -210,7 +210,7 @@ class _DetailCoursePageViewsState extends State<DetailCoursePageViews> {
     );
 
     return Container(
-      height: 100.h,
+      height: 120.h,
       margin: EdgeInsets.only(left: 24.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -253,7 +253,7 @@ class _DetailCoursePageViewsState extends State<DetailCoursePageViews> {
                 ),
               ),
             ),
-            SizedBox(height: 4.h),
+            const Spacer(flex: 2),
             Text(
               'Waktu',
               textAlign: TextAlign.left,
@@ -270,7 +270,7 @@ class _DetailCoursePageViewsState extends State<DetailCoursePageViews> {
 
   Widget buildCardFeeComponent() {
     return Container(
-      height: 100.h,
+      height: 120.h,
       margin: EdgeInsets.only(left: 24.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -319,7 +319,7 @@ class _DetailCoursePageViewsState extends State<DetailCoursePageViews> {
 
   Widget buildCardQuotaComponent() {
     return Container(
-      height: 100.h,
+      height: 120.h,
       margin: EdgeInsets.only(left: 24.w),
       decoration: BoxDecoration(
         color: Colors.white,

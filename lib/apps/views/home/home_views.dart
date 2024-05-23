@@ -80,10 +80,17 @@ class _HomePageViewsState extends State<HomePageViews>
                     ],
                   ),
                 ),
-                Icon(
-                  BoxIcons.bxs_user_circle,
-                  size: 36.r,
-                ),
+                FirebaseAuth.instance.currentUser!.photoURL != null
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          FirebaseAuth.instance.currentUser!.photoURL
+                              .toString(),
+                        ),
+                      )
+                    : const Icon(
+                        BoxIcons.bxs_user,
+                        color: AppThemeUtils.kColorPrimary,
+                      ),
               ],
             ),
           ),
@@ -252,18 +259,25 @@ class _HomePageViewsState extends State<HomePageViews>
                                     ),
                                   );
 
-                                  return HomeCourseWidget(
-                                    imageUrl: _courseController
-                                        .courseListRx[index].thumbnail,
-                                    title: _courseController
-                                        .courseListRx[index].title,
-                                    category: _courseController
-                                        .courseListRx[index].category,
-                                    startDate: startDate,
-                                    endDate: endDate,
-                                    startTime: startTime,
-                                    endTime: endTime,
-                                    type: 'Daring',
+                                  return GestureDetector(
+                                    onTap: () => Get.to(
+                                      () => DetailCoursePageViews(
+                                        courseId: e.uuid.toString(),
+                                      ),
+                                    ),
+                                    child: HomeCourseWidget(
+                                      imageUrl: _courseController
+                                          .courseListRx[index].thumbnail,
+                                      title: _courseController
+                                          .courseListRx[index].title,
+                                      category: _courseController
+                                          .courseListRx[index].category,
+                                      startDate: startDate,
+                                      endDate: endDate,
+                                      startTime: startTime,
+                                      endTime: endTime,
+                                      type: 'Daring',
+                                    ),
                                   );
                                 },
                               )
