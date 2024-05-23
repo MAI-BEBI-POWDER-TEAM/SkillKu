@@ -9,7 +9,8 @@ class ExplorePageViews extends StatefulWidget {
 
 class _ExplorePageViewsState extends State<ExplorePageViews>
     with SingleTickerProviderStateMixin {
-  RxString search = ''.obs;
+  RxString searchJob = ''.obs;
+  RxString searchCourse = ''.obs;
 
   final JobController _jobController = Get.find();
   final CourseController _courseController = Get.find();
@@ -95,10 +96,10 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
           child: TextFormField(
             controller: _searchController,
             onChanged: (value) {
-              search.value = value;
+              searchJob.value = value;
             },
             onSaved: (value) {
-              if (value != null) search.value = value;
+              if (value != null) searchJob.value = value;
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(
@@ -117,7 +118,7 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
           ),
         ),
         Obx(
-          () => search.value == ''
+          () => searchJob.value == ''
               ? FutureBuilder(
                   future: _jobController.getAllJob(),
                   builder: (context, snapshot) {
@@ -159,13 +160,12 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
                         }
                       }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
                       return const SizedBox();
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
                       return Center(
                         child: Text(
@@ -182,7 +182,7 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
                   },
                 )
               : FutureBuilder(
-                  future: _jobController.getJobBySearch(search.value),
+                  future: _jobController.getJobBySearch(searchJob.value),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.connectionState == ConnectionState.done) {
@@ -222,13 +222,12 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
                         }
                       }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
                       return const SizedBox();
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
                       return Center(
                         child: Text(
@@ -254,137 +253,194 @@ class _ExplorePageViewsState extends State<ExplorePageViews>
 
     return Column(
       children: [
-        // Container(
-        //   margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        //   child: TextFormField(
-        //     controller: _searchController,
-        //     onChanged: (value) {
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: TextFormField(
+            controller: _searchController,
+            onChanged: (value) {
+              searchCourse.value = value;
 
-        //     },
-        //     decoration: const InputDecoration(
-        //       prefixIcon: Icon(
-        //         BoxIcons.bx_search,
-        //         color: AppThemeUtils.kColorGrey2,
-        //       ),
-        //       isDense: true,
-        //       hintText: 'Search',
-        //       enabledBorder: OutlineInputBorder(
-        //         borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
-        //       ),
-        //       focusedBorder: OutlineInputBorder(
-        //         borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+              if (value.isEmpty || value == '') {
+                searchCourse.value = '';
+              }
+            },
+            onSaved: (value) {
+              if (value != null) {
+                searchCourse.value = value;
+              } else {
+                searchCourse.value = '';
+              }
+            },
+            decoration: const InputDecoration(
+              prefixIcon: Icon(
+                BoxIcons.bx_search,
+                color: AppThemeUtils.kColorGrey2,
+              ),
+              isDense: true,
+              hintText: 'Search',
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppThemeUtils.kColorGrey2),
+              ),
+            ),
+          ),
+        ),
         ValueListenableBuilder(
           valueListenable: _courseController.courseBox.listenable(),
           builder: (context, courses, __) {
             return Obx(
               () => _courseController.courseListRx.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No courses are found!',
-                        style: TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          color: AppThemeUtils.kColorPrimary,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12.sp,
-                        ),
-                      ),
+                  ? const Center(
+                      child: CircularProgressIndicator.adaptive(),
                     )
                   : Container(
                       width: 1.sw,
-                      height: 500.h,
+                      height: 400.h,
                       margin: EdgeInsets.only(
                         top: 8.h,
                         left: 16.w,
                         right: 16.w,
                       ),
-                      child: ListView.builder(
-                        itemCount: _courseController.courseListRx.length,
-                        itemBuilder: (context, index) {
-                          final startDate = DateFormat('dd MMMM').parse(
-                            _courseController.courseListRx[index].start,
-                          );
-                          final endDate = DateFormat('dd MMMM').parse(
-                            _courseController.courseListRx[index].end,
-                          );
+                      child: searchCourse.value == ''
+                          ? ListView.builder(
+                              itemCount: _courseController.courseListRx.length,
+                              itemBuilder: (context, index) {
+                                final e = _courseController.courseListRx[index];
 
-                          final sTime = DateFormat('dd MMMM yyyy HH:mm').parse(
-                            _courseController.courseListRx[index].start,
-                          );
-                          final eTime = DateFormat('dd MMMM yyyy HH:mm').parse(
-                            _courseController.courseListRx[index].end,
-                          );
+                                final startDate = DateFormat('dd MMMM').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final endDate = DateFormat('dd MMMM').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
 
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 16.h),
-                            child: CourseWidget(
-                              imageUrl: _courseController
-                                  .courseListRx[index].thumbnail,
-                              category: _courseController
-                                  .courseListRx[index].category,
-                              title:
-                                  _courseController.courseListRx[index].title,
-                              type: 'Daring',
-                              startDay: startDate.weekday.toString(),
-                              endDay: endDate.weekday.toString(),
-                              startDate:
-                                  DateFormat('dd MMMM').format(startDate),
-                              endDate: DateFormat('dd MMMM').format(endDate),
-                              startTime: '${sTime.hour}:${sTime.minute}',
-                              endTime: '${eTime.hour}:${eTime.minute}',
+                                final sTime = DateFormat('HH:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final eTime = DateFormat('HH:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.end * 1000,
+                                  ),
+                                );
+
+                                final sDay = DateFormat('EEEE').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final eDay = DateFormat('EEEE').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.end * 1000,
+                                  ),
+                                );
+
+                                return GestureDetector(
+                                  onTap: () => Get.to(
+                                    () => DetailCoursePageViews(
+                                      courseId: e.uuid.toString(),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 16.h),
+                                    child: CourseWidget(
+                                      imageUrl: e.thumbnail,
+                                      category: e.category,
+                                      title: e.title,
+                                      type: 'Daring',
+                                      startDay: sDay,
+                                      endDay: eDay,
+                                      startDate: startDate,
+                                      endDate: endDate,
+                                      startTime: sTime,
+                                      endTime: eTime,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : ListView.builder(
+                              itemCount: _courseController.courseListRx
+                                  .where(
+                                    (p0) =>
+                                        p0.title.contains(searchCourse.value),
+                                  )
+                                  .toList()
+                                  .length,
+                              itemBuilder: (context, index) {
+                                final e = _courseController.courseListRx
+                                    .where((p0) =>
+                                        p0.title.contains(searchCourse.value))
+                                    .toList()[index];
+
+                                final startDate = DateFormat('dd MMMM').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final endDate = DateFormat('dd MMMM').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+
+                                final sTime = DateFormat('HH:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final eTime = DateFormat('HH:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.end * 1000,
+                                  ),
+                                );
+
+                                final sDay = DateFormat('EEEE').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.start * 1000,
+                                  ),
+                                );
+                                final eDay = DateFormat('EEEE').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    e.end * 1000,
+                                  ),
+                                );
+
+                                return GestureDetector(
+                                  onTap: () => Get.to(
+                                    () => DetailCoursePageViews(
+                                      courseId: e.uuid.toString(),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 16.h),
+                                    child: CourseWidget(
+                                      imageUrl: e.thumbnail,
+                                      category: e.category,
+                                      title: e.title,
+                                      type: 'Daring',
+                                      startDay: sDay,
+                                      endDay: eDay,
+                                      startDate: startDate,
+                                      endDate: endDate,
+                                      startTime: sTime,
+                                      endTime: eTime,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
             );
           },
         ),
-        // Container(
-        //   width: 1.sw,
-        //   height: 300.h,
-        //   margin: EdgeInsets.only(top: 8.h, left: 16.w, right: 16.w),
-        //   child: ListView.builder(
-        //     itemCount: _courseController.courseList.length,
-        //     itemBuilder: (context, index) {
-        //       final date = _courseController.courseList[index]['date'];
-
-        //       final startDate = DateFormat('dd MMMM').format(date);
-        //       final endDate = DateFormat('dd MMMM').format(
-        //         date.add(const Duration(days: 2)),
-        //       );
-
-        //       final startDay = DateFormat('EEEE').format(date);
-        //       final endDay = DateFormat('EEEE').format(
-        //         date.add(const Duration(days: 2)),
-        //       );
-
-        //       final startTime = DateFormat('HH:mm').format(date);
-        //       final endTime = DateFormat('HH:mm').format(
-        //         date.add(const Duration(hours: 2)),
-        //       );
-
-        //       return Container(
-        //         margin: EdgeInsets.only(bottom: 16.h),
-        //         child: CourseWidget(
-        //           imageUrl: _courseController.courseList[index]['thumbnail'],
-        //           category: _courseController.courseList[index]['category'],
-        //           title: _courseController.courseList[index]['title'],
-        //           type: _courseController.courseList[index]['type'],
-        //           startDay: startDay,
-        //           endDay: endDay,
-        //           startDate: startDate,
-        //           endDate: endDate,
-        //           startTime: startTime,
-        //           endTime: endTime,
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
       ],
     );
   }

@@ -34,7 +34,9 @@ class _HomePageViewsState extends State<HomePageViews>
     String name = FirebaseAuth.instance.currentUser?.displayName ?? '';
 
     if (name.contains(' ')) {
-      name = FirebaseAuth.instance.currentUser?.displayName!.substring(0, name.indexOf(' ')) ?? '';
+      name = FirebaseAuth.instance.currentUser?.displayName!
+              .substring(0, name.indexOf(' ')) ??
+          '';
     } else {
       name = FirebaseAuth.instance.currentUser?.displayName ?? '';
     }
@@ -215,24 +217,57 @@ class _HomePageViewsState extends State<HomePageViews>
                     return SizedBox(
                       height: 220.h,
                       width: 300.w,
-                      child: ListView.builder(
-                        itemCount: _courseController.courseBox.values.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          final startDate = DateFormat('dd MMMM yyyy').parse(
-                            _courseController.courseListRx[index].start,
-                          );
+                      child: Obx(
+                        () => _courseController.courseListRx.isNotEmpty
+                            ? ListView.builder(
+                                itemCount:
+                                    _courseController.courseBox.values.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  final e =
+                                      _courseController.courseListRx[index];
 
-                          return HomeCourseWidget(
-                            imageUrl:
-                                _courseController.courseListRx[index].thumbnail,
-                            title: _courseController.courseListRx[index].title,
-                            category:
-                                _courseController.courseListRx[index].category,
-                            date: startDate,
-                            type: 'Daring',
-                          );
-                        },
+                                  final startDate =
+                                      DateFormat('dd MMMM yyyy').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      e.start * 1000,
+                                    ),
+                                  );
+
+                                  final endDate =
+                                      DateFormat('dd MMMM yyyy').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      e.end * 1000,
+                                    ),
+                                  );
+
+                                  final startTime = DateFormat('HH:mm').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      e.start * 1000,
+                                    ),
+                                  );
+                                  final endTime = DateFormat('HH:mm').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      e.end * 1000,
+                                    ),
+                                  );
+
+                                  return HomeCourseWidget(
+                                    imageUrl: _courseController
+                                        .courseListRx[index].thumbnail,
+                                    title: _courseController
+                                        .courseListRx[index].title,
+                                    category: _courseController
+                                        .courseListRx[index].category,
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    startTime: startTime,
+                                    endTime: endTime,
+                                    type: 'Daring',
+                                  );
+                                },
+                              )
+                            : const Center(child: Text('No data found!')),
                       ),
                     );
                   },

@@ -3,7 +3,10 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,6 +25,8 @@ part 'views/auth/onboarding_views.dart';
 part 'views/home/home_views.dart';
 // Explore
 part 'views/explore/explore_views.dart';
+// Details
+part 'views/detail/detail_course_views.dart';
 // Profile
 part 'views/profile/profile_views.dart';
 
@@ -31,3 +36,4 @@ part 'widgets/page_bottom_navbar.dart';
 part 'widgets/category_widget.dart';
 part 'widgets/course_widget.dart';
 part 'widgets/job_widget.dart';
+part 'widgets/detail_course_header_widget.dart';

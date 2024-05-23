@@ -28,59 +28,6 @@ class CourseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('image: $imageUrl', name: 'image');
-
-    String start = '';
-    String end = '';
-
-    switch (startDay) {
-      case '1':
-        start = 'Senin';
-        break;
-      case '2':
-        start = 'Selasa';
-        break;
-      case '3':
-        start = 'Rabu';
-        break;
-      case '4':
-        start = 'Kamis';
-        break;
-      case '5':
-        start = 'Jumat';
-        break;
-      case '6':
-        start = 'Sabtu';
-        break;
-      case '7':
-        start = 'Minggu';
-        break;
-    }
-
-    switch (endDay) {
-      case '1':
-        end = 'Senin';
-        break;
-      case '2':
-        end = 'Selasa';
-        break;
-      case '3':
-        end = 'Rabu';
-        break;
-      case '4':
-        end = 'Kamis';
-        break;
-      case '5':
-        end = 'Jumat';
-        break;
-      case '6':
-        end = 'Sabtu';
-        break;
-      case '7':
-        end = 'Minggu';
-        break;
-    }
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +105,7 @@ class CourseWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '$start - $end',
+                        '$startDay - $endDay',
                         style: TextStyle(
                           fontSize: 10.sp,
                         ),

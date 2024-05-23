@@ -12,9 +12,7 @@ class CourseDB {
   static Future<List<Course>> getAllCourse() async => courseBox.values.toList();
 
   static Course? getCourseByUUID(String uuid) =>
-      courseBox.values.toList().firstWhereOrNull(
-            (element) => uuid == element.uuid,
-          );
+      courseBox.values.toList().firstWhereOrNull((e) => uuid == e.uuid);
 
   static Future<void> insertCourse(Course course) async {
     await courseBox.add(course);

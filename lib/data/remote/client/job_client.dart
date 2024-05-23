@@ -17,7 +17,7 @@ class JobClient {
       final response = await dio.getUri(
         Uri.https(baseUrl, getJobSearch, {
           'engine': 'google_jobs',
-          'q': 'indonesia+IT',
+          'q': 'indonesia',
           'hl': 'en',
           'api_key': jobApiKey,
         }),

@@ -6,27 +6,24 @@ class HomeCourseWidget extends StatelessWidget {
     required this.imageUrl,
     required this.title,
     required this.category,
-    required this.date,
     required this.type,
+    required this.startDate,
+    required this.endDate,
+    required this.startTime,
+    required this.endTime,
   });
 
   final String imageUrl;
   final String title;
   final String category;
-  final DateTime date;
+  final String startDate;
+  final String endDate;
+  final String startTime;
+  final String endTime;
   final String type;
 
   @override
   Widget build(BuildContext context) {
-    String formattedStartDate = DateFormat('dd MMMM yyyy').format(date);
-    String formattedEndDate = DateFormat('dd MMMM yyyy').format(
-      date.add(const Duration(days: 2)),
-    );
-    String formattedStartTime = DateFormat('HH:mm').format(date);
-    String formattedEndTime = DateFormat('HH:mm').format(
-      date.add(const Duration(hours: 2)),
-    );
-
     return Card(
       elevation: 0.2,
       child: Padding(
@@ -69,7 +66,7 @@ class HomeCourseWidget extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              '$formattedStartDate - $formattedEndDate',
+              '$startDate - $endDate',
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: AppThemeUtils.kColorPrimary,
@@ -78,7 +75,7 @@ class HomeCourseWidget extends StatelessWidget {
               ),
             ),
             Text(
-              '$formattedStartTime - $formattedEndTime WIB',
+              '$startTime - $endTime WIB',
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: AppThemeUtils.kColorPrimary,

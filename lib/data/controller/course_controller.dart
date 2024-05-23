@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:skillku/data/local/course_db.dart';
 import 'package:skillku/domain/entities/course.dart';
 import 'package:skillku/domain/usecase/course_usecase.dart';
@@ -41,12 +40,15 @@ class CourseController extends GetxController {
           title: dataDecode['title'],
           category: dataDecode['category'],
           thumbnail: dataDecode['thumbnail'],
-          start: DateFormat('dd MMMM yyyy HH:mm').format(
-            DateTime.fromMillisecondsSinceEpoch(dataDecode['startdate'] * 1000),
-          ),
-          end: DateFormat('dd MMMM yyyy HH:mm').format(
-            DateTime.fromMillisecondsSinceEpoch(dataDecode['enddate'] * 1000),
-          ),
+          start: dataDecode['startdate'],
+          end: dataDecode['enddate'],
+          description: dataDecode['description'],
+          // start: DateFormat('dd MMMM yyyy HH:mm').format(
+          //   DateTime.fromMillisecondsSinceEpoch(dataDecode['startdate'] * 1000),
+          // ),
+          // end: DateFormat('dd MMMM yyyy HH:mm').format(
+          //   DateTime.fromMillisecondsSinceEpoch(dataDecode['enddate'] * 1000),
+          // ),
         );
 
         courseList.add(course);
@@ -69,7 +71,7 @@ class CourseController extends GetxController {
   }
 
   Future insertCourse({required Course course}) async {
-    await CourseDB.insertCourse(course);
+    await courseUseCase.addCourse(course: course);
   }
 
   Future<List<Course>> getAllCourse() async {

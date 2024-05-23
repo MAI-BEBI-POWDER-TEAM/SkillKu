@@ -30,9 +30,9 @@ void main() async {
   await CourseDB.init();
 
   // Get Put
-  Get.lazyPut(() => JobController());
-  Get.lazyPut(() => HomeController());
-  Get.lazyPut(() => CourseController());
+  Get.put(JobController(), permanent: true);
+  Get.put(HomeController(), permanent: true);
+  Get.put(CourseController(), permanent: true);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

@@ -13,15 +13,18 @@ class Course extends HiveObject {
   @HiveField(3)
   String thumbnail;
   @HiveField(4)
-  String start;
+  String description;
   @HiveField(5)
-  String end;
+  int start;
+  @HiveField(6)
+  int end;
 
   Course({
     this.uuid,
     required this.title,
     required this.category,
     required this.thumbnail,
+    required this.description,
     required this.start,
     required this.end,
   });
@@ -31,6 +34,7 @@ class Course extends HiveObject {
         'title': title,
         'category': category,
         'thumbnail': thumbnail,
+        'description': description,
         'start': start,
         'end': end,
       };
@@ -40,6 +44,7 @@ class Course extends HiveObject {
         title: json['title'],
         category: json['category'],
         thumbnail: json['thumbnail'],
+        description: json['description'],
         start: json['start'],
         end: json['end'],
       );
@@ -51,6 +56,7 @@ class Course extends HiveObject {
       title: $title
       category: $category
       thumbnail: $thumbnail
+      description: $description
       start: $start
       end: $end
     ''';
