@@ -2,9 +2,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="skillku"
+        android:label="SkillKu"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon_logo_colored">
         <activity
             android:name=".MainActivity"
             android:exported="true"
