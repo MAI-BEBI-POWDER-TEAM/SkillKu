@@ -27,4 +27,4 @@ const String jobApiKey = 'JUST_PASTE_YOUR_API_KEY_HERE';
 
 ### 2. Try the Android version, this is the quickest option
 1. Just go to ["Releases" section of this repository](https://github.com/MAI-BEBI-POWDER-TEAM/SkillKu/releases/tag/android-apk)
-2. Then download the **skillku-v1-release.apk** or **skillku-v1-debug.apk**
+2. Then download the **skillku-v101-release.apk** or **skillku-v101-debug.apk**
